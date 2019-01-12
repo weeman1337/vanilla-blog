@@ -1,0 +1,47 @@
+<?php
+/**
+ * @var callable $escape
+ * @var callable $escapeAttr
+ * @var array $cards
+ */
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Blog</title>
+    <script src="home.js"></script>
+</head>
+<body>
+<?php include __DIR__ . '/partials/nav.phtml'; ?>
+
+<div class="p-content">
+    <?php if ($error === true): ?>
+    <div class="row">
+        <div class="col-12">
+            <div class="p-notification--caution">
+                <p class="p-notification__response">
+                    We apologize that we are having some trouble loading the content...<br>
+                    Check again later to read our great articles!
+                </p>
+            </div>
+            <a class="p-button--neutral" href="/">Reload</a>
+        </div>
+    </div>
+    <?php else: ?>
+        <div class="row">
+            <div class="u-equal-height">
+                <?php
+                    foreach ($cards as $card) {
+                        include __DIR__ . '/partials/card.phtml';
+                    }
+                ?>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
+
+<?php include __DIR__ . '/partials/footer.phtml'; ?>
+</body>
+</html>

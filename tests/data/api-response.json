@@ -1,0 +1,1528 @@
+[
+  {
+    "id": 87253,
+    "date": "2019-01-10T10:33:07",
+    "date_gmt": "2019-01-10T10:33:07",
+    "guid": {
+      "rendered": "https:\/\/admin.insights.ubuntu.com\/?p=87253"
+    },
+    "modified": "2019-01-10T10:33:08",
+    "modified_gmt": "2019-01-10T10:33:08",
+    "slug": "snap-up-your-development-tools-for-making-the-snap-trek-easier",
+    "status": "publish",
+    "type": "post",
+    "link": "https:\/\/admin.insights.ubuntu.com\/2019\/01\/10\/snap-up-your-development-tools-for-making-the-snap-trek-easier\/",
+    "title": {
+      "rendered": "Snap up your development &#8211; Tools for making the snap trek easier"
+    },
+    "content": {
+      "rendered": "\n<blockquote class=\"wp-block-quote\"><p><em>Software development is what happens in between users and bug reports.<\/em><\/p><cite>Niccolo Machiavelli<\/cite><\/blockquote>\n\n\n\n<p>In an ideal world, developers would be able to create new applications without any errors, and live happily ever after. Unfortunately, errors, warnings and bugs are an inseparable part of the process. Sometimes, these problems are caused or magnified by the very development framework, making the coding that much harder.<\/p>\n\n\n\n<p>Snapcraft comes with its own basket of mysteries, side by side with the benefits and advantages that it brings. We want to make snapcraft as streamlined and elegant as possible, so that developers can focus on productivity, translating their ideas to creation, and not having to fight the environment and the tools they are using. To that end, we\u2019d like to share several practical, useful tips and tricks that can make your snap journey as a developer more pleasant and effective.<\/p>\n\n\n\n<h1>YAML linting<\/h1>\n\n\n\n<p>One of the most trivial checks to run before building a snap is to make sure the snapcraft.yaml file has a correct, valid syntax. There could be minor typos in your file, and running the code against a validator can save time. Snapcraft has some built-in checks, but you can make the process even more robust.<\/p>\n\n\n\n<p>You can use tools like JS-YAML or YAML Lint online. This is not a perfect solution, and some errors may slip under the radar, but you can at least detect and fix the obvious ones before you start your application build. Various linting tools for YAML are also available in most Linux distribution repositories, so you can also use those, and maybe even integrate them into your development build environment.<\/p>\n\n\n\n<pre class=\"wp-block-preformatted\">yamllint snapcraft.yaml<br>snapcraft.yaml<br>  1:1  warning  missing document start \"---\" (document-start)<br>19:81  error    line too long (91 > 80 characters) (line-length)<br>51:26  error    trailing spaces (trailing-spaces)<br>56:21  error    trailing spaces (trailing-spaces)<br>57:16  error    trailing spaces (trailing-spaces)<\/pre>\n\n\n\n<figure class=\"wp-block-image\"><img src=\"https:\/\/lh3.googleusercontent.com\/U2i8D78MGix19_2V5dDbrCum1zf-LvekNeROTkD3gtHSkdA7qX8yM-MLTPkgJcf0NQe7sSiE_9UAi60g6xJ-H6EZH9DZ2r5TRO87t4ndVi3sA_FXkINbPb_J_I21E54-B9H2dIDR\" alt=\"\"\/><\/figure>\n\n\n\n<figure class=\"wp-block-image\"><img src=\"https:\/\/lh6.googleusercontent.com\/JPfVP3fPCA1ZN556bMExXt5U0f65_hwXLIgLylbxCsV3tJo-FNoX8z8dCVafo3n5MzIIRK2fA6yetTxIg7wwnTTW7FuCNAydoeFYKmh7S4ApKFW9tNMHbOo6YF-K-DHNtVbX7PKZ\" alt=\"\"\/><\/figure>\n\n\n\n<h1>Clean build<\/h1>\n\n\n\n<p>It is best to build snaps in a clean environment. There are several ways you can do this. The ideal solution is to use the <em>base<\/em> keyword in your snapcraft.yaml, e.g.:<\/p>\n\n\n\n<pre class=\"wp-block-preformatted\">base: core18<\/pre>\n\n\n\n<p>The base keyword specifies a special kind of snap that provides a minimal set of libraries common to most applications. It will be mounted as the root filesystem for your application. Using <strong>core18<\/strong> as the base is the recommended option.<\/p>\n\n\n\n<p>In the background, snapcraft will instantiate virtual machines and build snaps in a pristine, isolated and consistent environment. If you encounter errors or problems, you can then run <em>snapcraft clean &lt;part><\/em> to delete created artifacts and re-run your builds.<\/p>\n\n\n\n<p>Alternatively, if you are not using the base keyword, you can use the <em>snapcraft cleanbuild<\/em> command. This command will span a new container with the necessary build tools inside, parse the snapcraft.yaml file and try to build your snap.<\/p>\n\n\n\n<h1>Review Tools snap<\/h1>\n\n\n\n<p>Once you have built your snap successfully, the next step is to upload it to the store for a review. After it\u2019s been approved, it will be published and made available to users. Sometimes, your snap may be rejected, and it is frustrating to have to wait and then start over again.<\/p>\n\n\n\n<p>You can save time by reviewing your own snaps &#8211; using the same tools normally involved in the vetting process. The review-tools snap is a set of scripts that can analyze your newly built snap before you upload it, allowing you to remedy any errors and warnings you encounter. First, start by installing the tools:<\/p>\n\n\n\n<pre class=\"wp-block-preformatted\">snap install review-tools --beta<\/pre>\n\n\n\n<p>After the snap is installed, run it against <em>your<\/em> snap:<\/p>\n\n\n\n<pre class=\"wp-block-preformatted\">snap-review &lt;snap file&gt;<\/pre>\n\n\n\n<p>The review-tools snap also comes with several options, so you can tweak your testing. It allows for overrides, classic confinement, and other flags. You can check the full list by running the tool without a target and only the <em>&#8211;help<\/em> argument.<\/p>\n\n\n\n<p>After the tool finishes running, it will print output, which you can then use to better understand the nature of your non-compliant code and rebuild the snap. You should publish the snap once you get a clean run.<\/p>\n\n\n\n<pre class=\"wp-block-preformatted\"> - lint-snap-v2:meta_gui_desktop<br><br>desktop interfaces (unity7,x11) specified without a corresponding meta\/gui\/*.desktop file. If using snapcraft, please see https:\/\/snapcraft.io\/docs\/build-snaps\/metadata#fixed-assets. Otherwise, please provide a desktop file in meta\/gui\/*.desktop (it should reference one of the 'apps' from your snapcraft\/snap.yaml).<br><br>xyz_amd64.snap: FAIL<\/pre>\n\n\n\n<p>The output above shows a typical error a developer may see after running the review-tools snap. Some of the explanations are self-explanatory, and you will also usually get a reference to the online documentation.<\/p>\n\n\n\n<p>Finally, like the linting tools, you can add snap-review into your Continuous Integration (CI) environment or your software release process, so you get an automated report of your builds before uploads. This can be helpful if you develop applications as part of a team, and allow you to detect possible breakages before the software lands in the Snap Store.<\/p>\n\n\n\n<h1>Home directory contents and configurations<\/h1>\n\n\n\n<p>If you\u2019re testing the behavior of your snaps, you may discover that it is not using the configuration normally found in your home directory. For example, if you have GIMP 2.8 installed from the repositories and GIMP 2.10 as a snap, the scripts, brushes, themes, and templates you may have stored in the program\u2019s hidden folder in your home will not be available in the snap, which could hamper your experience. The reason for the separation stems from security considerations, to prevent confined snaps from accessing configuration files and potentially sensitive data.<\/p>\n\n\n\n<p>You can move content &#8211; either for testing or actual use &#8211; into the snap environment. This is a seemingly trivial action, but it can save a lot of time and effort, especially if you need to troubleshoot specific behavior in your snap.<\/p>\n\n\n\n<p>For each snap, go to <em>~\/snap\/&lt;application name><\/em>. In this folder, there may be several versions of the program available, with <em>current<\/em> being a symbolic link pointing to the relevant version. Inside, you will find the expected hierarchy of files and folders as you\u2019d normally find in your home directory. You can now manually copy the files from outside the snap environment into it, so your applications will use the content on next launch. For instance:<\/p>\n\n\n\n<pre class=\"wp-block-preformatted\">cp ~\/.gimp-2.8\/scripts\/file.scm ~\/snap\/gimp\/current\/&nbsp;&nbsp;&nbsp; <\/pre>\n\n\n\n<h1>Interfaces<\/h1>\n\n\n\n<p>Snaps are designed to be <a href=\"https:\/\/docs.snapcraft.io\/interface-management\/6154\">confined and restricted<\/a> in what they can do. In some cases, the snap may be packaged in a way that do not use folders inside the home directory, so you won\u2019t be able to move or copy content into the snap environment using the method shown above. Specifically, the home interface will be auto-connected on classic systems, but it will not be on Ubuntu Core. Instead, you can connect to the home interface manually to perform necessary tasks. For instance:<\/p>\n\n\n\n<pre class=\"wp-block-preformatted\">snap connect easy-openvpn:home<br>sudo easy-openvpn.add-client laptop > laptop.ovpn<br>snap disconnect easy-openvpn:home<\/pre>\n\n\n\n<h1>Snappy Debug<\/h1>\n\n\n\n<p>We briefly touched on the interfaces, but there\u2019s more we can do to troubleshoot our applications. Specifically, when an interface is omitted in snapcraft.yaml (or not auto-connected), but your software expects it to be available, this may result in the application misbehaving.<\/p>\n\n\n\n<p>The snap security team have provided a tool to debug these situations, and it\u2019s called <a href=\"https:\/\/docs.snapcraft.io\/debugging-building-snaps\/6274\">snappy-debug<\/a>. Like the review-tools, it is available as a snap. Once it\u2019s installed, you can use it to help identify missing interfaces by reporting on application security failures. It will also make suggestions on how to improve the snap, perhaps by adding interfaces.<\/p>\n\n\n\n<pre class=\"wp-block-preformatted\">snap install snappy-debug<\/pre>\n\n\n\n<p>After the snappy-debug tool is installed, run it in a separate shell:<\/p>\n\n\n\n<pre class=\"wp-block-preformatted\">snappy-debug.security scanlog<br>INFO: following '\/var\/log\/syslog'. If have dropped messages, use:<br>INFO: $ sudo journalctl --output=short --follow --all | sudo snappy-debug.security scanlog<\/pre>\n\n\n\n<p>Then, in another window, run your application and go through the expected behavior steps until you encounter an error. You can then consult the log for more details, which should highlight any issues with your snap. For instance, if you use a Firefox snap with the removable-media that isn\u2019t auto-connected, and you try to save a file to a USB drive, you will see something like this:<\/p>\n\n\n\n<pre class=\"wp-block-preformatted\">= AppArmor =<br>Time: Oct 24 13:39:04<br>Log: apparmor=\"DENIED\" operation=\"open\" profile=\"snap.firefox.firefox\" name=\"\/etc\/fstab\" pid=25299 comm=\"firefox\" requested_mask=\"r\" denied_mask=\"r\" fsuid=1000 ouid=0<br>File: \/etc\/fstab (read)<br>Suggestions:<br>* adjust program to read necessary files from $SNAP, $SNAP_DATA, $SNAP_COMMON, $SNAP_USER_DATA or $SNAP_USER_COMMON<br>* add 'mount-observe' to 'plugs'<br><br>= AppArmor =<br>Time: Oct 24 13:39:05<br>Log: apparmor=\"DENIED\" operation=\"dbus_method_call\" \u00a0bus=\"system\" path=\"\/org\/freedesktop\/hostname1\" interface=\"org.freedesktop.DBus.Properties\" member=\"GetAll\" mask=\"send\" name=\":1.289\" pid=25299 label=\"snap.firefox.firefox\" peer_pid=22465 peer_label=\"unconfined\"<br>DBus access<br>Suggestion:<br>* try adding 'hostname-control' to 'plugs'<br><br>= AppArmor =<br>Time: Oct 24 13:39:07<br>Log: apparmor=\"DENIED\" operation=\"open\" profile=\"snap.firefox.firefox\" name=\"\/media\/alan\/9098a06f-f509-452a-b2b8-3f00aee808a2\/\" pid=25299 comm=\"pool\" requested_mask=\"r\" denied_mask=\"r\" fsuid=1000 ouid=0<br>File: \/media\/alan\/9098a06f-f509-452a-b2b8-3f00aee808a2\/ (read)<br>Suggestion:<br>* adjust program to read necessary files from $SNAP, $SNAP_DATA, $SNAP_COMMON, $SNAP_USER_DATA or $SNAP_USER_COMMON<\/pre>\n\n\n\n<h1>Strace<\/h1>\n\n\n\n<p>Sometimes, you have be interested in <a href=\"https:\/\/snapcraft.io\/blog\/i-have-a-need-a-need-for-snap\">profiling the behavior<\/a> of your application in detail. You might want to compare the initial startup between your application as a snap and the version distributed through the repository channels. Or you might want to examine the performance, or resolve an issue with a missing theme.<\/p>\n\n\n\n<p>The snap binary comes with a built-in strace functionality. The invocation is slightly different from the standard usage, but the tool works exactly like the strace program normally would, including the different flags. For example, -c for a summary run, or -s512 to get the log printed with 512 characters per line (often useful if you need to debug long file name paths). To use strace, you need to use the equal sign to pass the arguments to strace and enclose the options in double quotation marks:<\/p>\n\n\n\n<pre class=\"wp-block-preformatted\">snap run --strace=\u201d-s512 -f\u201d<\/pre>\n\n\n\n<h1>Conclusion<\/h1>\n\n\n\n<p>We believe that software tools should work with the developers &#8211; not against them. If the development framework is not transparent, then it can hurt the productivity and creativity of the developer. Snapcraft has many useful, practical features, and we&#8217;re working on making the experience even more streamlined.<\/p>\n\n\n\n<p>If you are developing snaps, we\u2019d like to see you spend as little time debugging errors and warnings and focus on making your software as robust as possible. To that end, the tips and tricks presented in this article, from linting to review and configurations, ought to help you enjoy snapcraft.<\/p>\n\n\n\n<p>If you have any questions or perhaps useful tips of your own own you\u2019d like to share, please join the discussion forum.<\/p>\n\n\n\n<p>P.S. No Star Trek fans were harmed in the production of this blog post.<\/p>\n\n\n\n<p>Photo by <a href=\"https:\/\/unsplash.com\/photos\/s8OO2-t-HmQ?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText\">Hunter Haley<\/a> on <a href=\"https:\/\/unsplash.com\/search\/photos\/toolbox?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText\">Unsplash<\/a><\/p>\n",
+      "protected": false
+    },
+    "excerpt": {
+      "rendered": "<p>Software development is what happens in between users and bug reports. Niccolo Machiavelli In an ideal world, developers would be able to create new applications without any errors, and live happily ever after. Unfortunately, errors, warnings and bugs are an inseparable part of the process. Sometimes, these problems are caused or magnified by the very [&hellip;]<\/p>\n",
+      "protected": false
+    },
+    "author": 597,
+    "featured_media": 87255,
+    "comment_status": "open",
+    "ping_status": "closed",
+    "sticky": false,
+    "template": "",
+    "format": "standard",
+    "meta": [],
+    "categories": [
+      2635
+    ],
+    "tags": [
+      2996
+    ],
+    "topic": [],
+    "group": [],
+    "_event_location": "",
+    "_event_venue": "",
+    "_event_registration": "",
+    "_start_day": "10",
+    "_start_month": "01",
+    "_start_year": "2019",
+    "_end_day": "10",
+    "_end_month": "01",
+    "_end_year": "2019",
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts\/87253"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/types\/post"
+        }
+      ],
+      "author": [
+        {
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/users\/597"
+        }
+      ],
+      "replies": [
+        {
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/comments?post=87253"
+        }
+      ],
+      "version-history": [
+        {
+          "count": 4,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts\/87253\/revisions"
+        }
+      ],
+      "predecessor-version": [
+        {
+          "id": 87275,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts\/87253\/revisions\/87275"
+        }
+      ],
+      "wp:featuredmedia": [
+        {
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media\/87255"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media?parent=87253"
+        }
+      ],
+      "wp:term": [
+        {
+          "taxonomy": "category",
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/categories?post=87253"
+        },
+        {
+          "taxonomy": "post_tag",
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags?post=87253"
+        },
+        {
+          "taxonomy": "topic",
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/topic?post=87253"
+        },
+        {
+          "taxonomy": "group",
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/group?post=87253"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    },
+    "_embedded": {
+      "author": [
+        {
+          "id": 597,
+          "name": "Igor Ljubuncic",
+          "url": "https:\/\/login.ubuntu.com\/+id\/XppHAr6",
+          "description": "",
+          "link": "https:\/\/admin.insights.ubuntu.com\/author\/igorljubuncic\/",
+          "slug": "igorljubuncic",
+          "avatar_urls": {
+            "24": "https:\/\/secure.gravatar.com\/avatar\/fe0589ad41ef5c32641d0dbf4e77a589?s=24&d=mm&r=g",
+            "48": "https:\/\/secure.gravatar.com\/avatar\/fe0589ad41ef5c32641d0dbf4e77a589?s=48&d=mm&r=g",
+            "96": "https:\/\/secure.gravatar.com\/avatar\/fe0589ad41ef5c32641d0dbf4e77a589?s=96&d=mm&r=g"
+          },
+          "user_job_title": "",
+          "user_website_title": "",
+          "user_google": "",
+          "user_twitter": "",
+          "user_facebook": "",
+          "user_photo": "",
+          "user_location": "",
+          "_links": {
+            "self": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/users\/597"
+              }
+            ],
+            "collection": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/users"
+              }
+            ]
+          }
+        }
+      ],
+      "wp:featuredmedia": [
+        {
+          "id": 87255,
+          "date": "2019-01-10T10:27:36",
+          "slug": "hunter-haley-424256-unsplash",
+          "type": "attachment",
+          "link": "https:\/\/admin.insights.ubuntu.com\/2019\/01\/10\/snap-up-your-development-tools-for-making-the-snap-trek-easier\/hunter-haley-424256-unsplash\/",
+          "title": {
+            "rendered": ""
+          },
+          "author": 597,
+          "caption": {
+            "rendered": ""
+          },
+          "alt_text": "Toolbox",
+          "media_type": "image",
+          "mime_type": "image\/jpeg",
+          "media_details": {
+            "width": 5184,
+            "height": 3456,
+            "file": "hunter-haley-424256-unsplash.jpg",
+            "image_meta": {
+              "aperture": "0",
+              "credit": "",
+              "camera": "",
+              "caption": "",
+              "created_timestamp": "0",
+              "copyright": "",
+              "focal_length": "0",
+              "iso": "0",
+              "shutter_speed": "0",
+              "title": "",
+              "orientation": "0",
+              "keywords": []
+            },
+            "sizes": {}
+          },
+          "source_url": "https:\/\/admin.insights.ubuntu.com\/wp-content\/uploads\/69d2\/hunter-haley-424256-unsplash.jpg",
+          "_links": {
+            "self": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media\/87255"
+              }
+            ],
+            "collection": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media"
+              }
+            ],
+            "about": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/types\/attachment"
+              }
+            ],
+            "author": [
+              {
+                "embeddable": true,
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/users\/597"
+              }
+            ],
+            "replies": [
+              {
+                "embeddable": true,
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/comments?post=87255"
+              }
+            ],
+            "wp:term": [
+              {
+                "taxonomy": "topic",
+                "embeddable": true,
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/topic?post=87255"
+              },
+              {
+                "taxonomy": "group",
+                "embeddable": true,
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/group?post=87255"
+              }
+            ],
+            "curies": [
+              {
+                "name": "wp",
+                "href": "https:\/\/api.w.org\/{rel}",
+                "templated": true
+              }
+            ]
+          }
+        }
+      ],
+      "wp:term": [
+        [
+          {
+            "id": 2635,
+            "link": "https:\/\/admin.insights.ubuntu.com\/category\/desktop\/",
+            "name": "Desktop",
+            "slug": "desktop",
+            "taxonomy": "category",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/categories\/2635"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/categories"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/category"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?categories=2635"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?categories=2635"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "id": 2996,
+            "link": "https:\/\/admin.insights.ubuntu.com\/tag\/snapcraft-io\/",
+            "name": "snapcraft.io",
+            "slug": "snapcraft-io",
+            "taxonomy": "post_tag",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags\/2996"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/post_tag"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?tags=2996"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?tags=2996"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ],
+        [],
+        []
+      ]
+    }
+  },
+  {
+    "id": 87197,
+    "date": "2019-01-09T10:00:17",
+    "date_gmt": "2019-01-09T10:00:17",
+    "guid": {
+      "rendered": "https:\/\/admin.insights.ubuntu.com\/?p=87197"
+    },
+    "modified": "2019-01-07T14:08:03",
+    "modified_gmt": "2019-01-07T14:08:03",
+    "slug": "apellix-engineers-safer-work-environments-with-ubuntu-powered-aerial-robotics",
+    "status": "publish",
+    "type": "post",
+    "link": "https:\/\/admin.insights.ubuntu.com\/2019\/01\/09\/apellix-engineers-safer-work-environments-with-ubuntu-powered-aerial-robotics\/",
+    "title": {
+      "rendered": "Apellix engineers safer work environments with Ubuntu powered aerial robotics"
+    },
+    "content": {
+      "rendered": "\n<figure class=\"wp-block-image\"><img src=\"https:\/\/admin.insights.ubuntu.com\/wp-content\/uploads\/f33a\/Refinery-Tank.jpg\" alt=\"\" class=\"wp-image-86652\"\/><\/figure>\n\n\n\n<p>In 2016, 16% of all workplace deaths in the US were attributed to falls. <a href=\"https:\/\/www.apellix.com\/\">Apellix<\/a>, a Florida-based start up, who specialise in aerial robotics aims to reduce this number by using their drones in place of workers to complete tasks in elevated or dangerous environments. In tandem, these same aerial robotics can also reduce the costs of monotonous or time-consuming jobs to save money. <br><\/p>\n\n\n\n<p>Data insights and efficiency enhancements are often seen as two of the biggest benefits that the internet of things can bring to organisations. However, the potential advantages of implementing IoT span far wider than business processes and analytics. As Apellix show, it is no exaggeration to state that IoT can save lives by replacing humans in certain scenarios, with technology. <br><\/p>\n\n\n\n<p>Using US Navy Destroyer and Aircraft Carrier ships as one example, find out how Apellix have built a software-defined drone running Ubuntu to enable an autonomous and highly accurate way to overcome such issues. <br><\/p>\n\n\n\n<p>Download the case study below to find out more including: <\/p>\n\n\n\n<ul><li>The industries and use cases from maritime, to energy, and infrastructure that aerial robotics can address to provide an alternative to putting workers at risk. &nbsp;<\/li><li>How Apellix, using a software-led approach, has facilitated new levels of accuracy and situational awareness beyond what a human could gauge. <\/li><li>How the use of Ubuntu on the aerial robotics and in the cloud has cut their development time in half. &nbsp;&nbsp;<\/li><\/ul>\n\n\n\n<script src=\"\/\/app-sjg.marketo.com\/js\/forms2\/js\/forms2.min.js\"><\/script>\n<form id=\"mktoForm_3314\"><\/form>\n<script>MktoForms2.loadForm(\"\/\/app-sjg.marketo.com\", \"066-EOV-335\", 3314);<\/script>\n",
+      "protected": false
+    },
+    "excerpt": {
+      "rendered": "<p>In 2016, 16% of all workplace deaths in the US were attributed to falls. Apellix, a Florida-based start up, who specialise in aerial robotics aims to reduce this number by using their drones in place of workers to complete tasks in elevated or dangerous environments. In tandem, these same aerial robotics can also reduce the [&hellip;]<\/p>\n",
+      "protected": false
+    },
+    "author": 511,
+    "featured_media": 86653,
+    "comment_status": "open",
+    "ping_status": "closed",
+    "sticky": false,
+    "template": "",
+    "format": "standard",
+    "meta": [],
+    "categories": [
+      1172
+    ],
+    "tags": [
+      1829,
+      1701,
+      2249,
+      1665,
+      1721,
+      1610
+    ],
+    "topic": [
+      1924
+    ],
+    "group": [
+      1666
+    ],
+    "_event_location": "",
+    "_event_venue": "",
+    "_event_registration": "",
+    "_start_day": "07",
+    "_start_month": "01",
+    "_start_year": "2019",
+    "_end_day": "07",
+    "_end_month": "01",
+    "_end_year": "2019",
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts\/87197"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/types\/post"
+        }
+      ],
+      "author": [
+        {
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/users\/511"
+        }
+      ],
+      "replies": [
+        {
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/comments?post=87197"
+        }
+      ],
+      "version-history": [
+        {
+          "count": 4,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts\/87197\/revisions"
+        }
+      ],
+      "predecessor-version": [
+        {
+          "id": 87204,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts\/87197\/revisions\/87204"
+        }
+      ],
+      "wp:featuredmedia": [
+        {
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media\/86653"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media?parent=87197"
+        }
+      ],
+      "wp:term": [
+        {
+          "taxonomy": "category",
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/categories?post=87197"
+        },
+        {
+          "taxonomy": "post_tag",
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags?post=87197"
+        },
+        {
+          "taxonomy": "topic",
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/topic?post=87197"
+        },
+        {
+          "taxonomy": "group",
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/group?post=87197"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    },
+    "_embedded": {
+      "author": [
+        {
+          "id": 511,
+          "name": "Sarah Dickinson",
+          "url": "https:\/\/login.ubuntu.com\/+id\/RzMkxQf",
+          "description": "Sarah manages IoT communications at Canonical. With a keen interest in technology, she has experience working in global B2B and B2C companies including Toshiba and Tektronix.",
+          "link": "https:\/\/admin.insights.ubuntu.com\/author\/sarahfd\/",
+          "slug": "sarahfd",
+          "avatar_urls": {
+            "24": "https:\/\/secure.gravatar.com\/avatar\/e00b2bb1aeea4227fdd8fb5901800ace?s=24&d=mm&r=g",
+            "48": "https:\/\/secure.gravatar.com\/avatar\/e00b2bb1aeea4227fdd8fb5901800ace?s=48&d=mm&r=g",
+            "96": "https:\/\/secure.gravatar.com\/avatar\/e00b2bb1aeea4227fdd8fb5901800ace?s=96&d=mm&r=g"
+          },
+          "user_job_title": "Global Head of PR, IoT & Devices",
+          "user_website_title": "",
+          "user_google": "",
+          "user_twitter": "@dickinsonsarah7",
+          "user_facebook": "",
+          "user_photo": "",
+          "user_location": "",
+          "_links": {
+            "self": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/users\/511"
+              }
+            ],
+            "collection": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/users"
+              }
+            ]
+          }
+        }
+      ],
+      "wp:featuredmedia": [
+        {
+          "id": 86653,
+          "date": "2018-11-10T17:54:07",
+          "slug": "dft-ship-1",
+          "type": "attachment",
+          "link": "https:\/\/admin.insights.ubuntu.com\/2018\/11\/14\/innovating-toward-safety-computer-controlled-aerial-robotic-systems\/dft-ship-1\/",
+          "title": {
+            "rendered": "DFT Ship 1"
+          },
+          "author": 511,
+          "caption": {
+            "rendered": ""
+          },
+          "alt_text": "",
+          "media_type": "image",
+          "mime_type": "image\/jpeg",
+          "media_details": {
+            "width": 1920,
+            "height": 1080,
+            "file": "DFT-Ship-1.jpg",
+            "image_meta": {
+              "aperture": "9",
+              "credit": "",
+              "camera": "NIKON D3300",
+              "caption": "",
+              "created_timestamp": "1505389036",
+              "copyright": "",
+              "focal_length": "55",
+              "iso": "100",
+              "shutter_speed": "0.0025",
+              "title": "",
+              "orientation": "1",
+              "keywords": []
+            },
+            "sizes": {}
+          },
+          "source_url": "https:\/\/admin.insights.ubuntu.com\/wp-content\/uploads\/8209\/DFT-Ship-1.jpg",
+          "_links": {
+            "self": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media\/86653"
+              }
+            ],
+            "collection": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media"
+              }
+            ],
+            "about": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/types\/attachment"
+              }
+            ],
+            "author": [
+              {
+                "embeddable": true,
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/users\/511"
+              }
+            ],
+            "replies": [
+              {
+                "embeddable": true,
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/comments?post=86653"
+              }
+            ],
+            "wp:term": [
+              {
+                "taxonomy": "topic",
+                "embeddable": true,
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/topic?post=86653"
+              },
+              {
+                "taxonomy": "group",
+                "embeddable": true,
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/group?post=86653"
+              }
+            ],
+            "curies": [
+              {
+                "name": "wp",
+                "href": "https:\/\/api.w.org\/{rel}",
+                "templated": true
+              }
+            ]
+          }
+        }
+      ],
+      "wp:term": [
+        [
+          {
+            "id": 1172,
+            "link": "https:\/\/admin.insights.ubuntu.com\/category\/case-studies\/",
+            "name": "Case studies",
+            "slug": "case-studies",
+            "taxonomy": "category",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/categories\/1172"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/categories"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/category"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?categories=1172"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?categories=1172"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "id": 1829,
+            "link": "https:\/\/admin.insights.ubuntu.com\/tag\/case-study\/",
+            "name": "case study",
+            "slug": "case-study",
+            "taxonomy": "post_tag",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags\/1829"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/post_tag"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?tags=1829"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?tags=1829"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          },
+          {
+            "id": 1701,
+            "link": "https:\/\/admin.insights.ubuntu.com\/tag\/drones\/",
+            "name": "Drones",
+            "slug": "drones",
+            "taxonomy": "post_tag",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags\/1701"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/post_tag"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?tags=1701"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?tags=1701"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          },
+          {
+            "id": 2249,
+            "link": "https:\/\/admin.insights.ubuntu.com\/tag\/internet-of-things\/",
+            "name": "Internet of things",
+            "slug": "internet-of-things",
+            "taxonomy": "post_tag",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags\/2249"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/post_tag"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?tags=2249"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?tags=2249"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          },
+          {
+            "id": 1665,
+            "link": "https:\/\/admin.insights.ubuntu.com\/tag\/iot\/",
+            "name": "IoT",
+            "slug": "iot",
+            "taxonomy": "post_tag",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags\/1665"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/post_tag"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?tags=1665"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?tags=1665"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          },
+          {
+            "id": 1721,
+            "link": "https:\/\/admin.insights.ubuntu.com\/tag\/robotics\/",
+            "name": "robotics",
+            "slug": "robotics",
+            "taxonomy": "post_tag",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags\/1721"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/post_tag"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?tags=1721"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?tags=1721"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          },
+          {
+            "id": 1610,
+            "link": "https:\/\/admin.insights.ubuntu.com\/tag\/ubuntu-server\/",
+            "name": "Ubuntu Server",
+            "slug": "ubuntu-server",
+            "taxonomy": "post_tag",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags\/1610"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/post_tag"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?tags=1610"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?tags=1610"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "id": 1924,
+            "link": "https:\/\/admin.insights.ubuntu.com\/topic\/internet-of-things\/",
+            "name": "Internet of Things",
+            "slug": "internet-of-things",
+            "taxonomy": "topic",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/topic\/1924"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/topic"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/topic"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?topic=1924"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media?topic=1924"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?topic=1924"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "id": 1666,
+            "link": "https:\/\/admin.insights.ubuntu.com\/group\/internet-of-things\/",
+            "name": "Internet of Things",
+            "slug": "internet-of-things",
+            "taxonomy": "group",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/group\/1666"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/group"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/group"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?group=1666"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media?group=1666"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?group=1666"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    }
+  },
+  {
+    "id": 87224,
+    "date": "2019-01-08T20:46:04",
+    "date_gmt": "2019-01-08T20:46:04",
+    "guid": {
+      "rendered": "https:\/\/admin.insights.ubuntu.com\/?p=87224"
+    },
+    "modified": "2019-01-08T20:46:07",
+    "modified_gmt": "2019-01-08T20:46:07",
+    "slug": "ubuntu-server-development-summary-08-january-2019",
+    "status": "publish",
+    "type": "post",
+    "link": "https:\/\/admin.insights.ubuntu.com\/2019\/01\/08\/ubuntu-server-development-summary-08-january-2019\/",
+    "title": {
+      "rendered": "Ubuntu Server development summary &#8211; 08 January 2019"
+    },
+    "content": {
+      "rendered": "<h1 id=\"hello-ubuntu-server\">Hello Ubuntu Server<\/h1>\n<p>The purpose of this communication is to provide a status update and highlights for any interesting subjects from the Ubuntu Server Team. If you would like to reach the server team, you can find us at the #ubuntu-server channel on Freenode. Alternatively, you can sign up and use the Ubuntu Server Team <a href=\"https:\/\/lists.ubuntu.com\/mailman\/listinfo\/ubuntu-server\">mailing list<\/a> or visit the <a href=\"https:\/\/discourse.ubuntu.com\/c\/server\">Ubuntu Server discourse hub<\/a> for more discussion.<\/p>\n<h2 id=\"spotlight-cloud-init-18.5-and-curtin-18.2-released\">Spotlight: cloud-init 18.5 and curtin 18.2 Released<\/h2>\n<p>As 2018 drew to a close, we qualified and released curtin 18.2 and cloud-init 18.5. Both upstream releases are currently available in all Ubuntu 19.04 (Disco Dingo) images. For a list of features released, see <a href=\"https:\/\/launchpad.net\/curtin\/trunk\/18.2\">curtin<\/a> and <a href=\"https:\/\/launchpad.net\/cloud-init\/trunk\/18.5\">cloud-init<\/a> milestone release notes on Launchpad.<\/p>\n<h2 id=\"cloud-init\">cloud-init<\/h2>\n<ul>\n<li>doc: clean up some datasource documentation.<\/li>\n<li>ds-identify: fix wrong variable name in ovf_vmware_transport_guestinfo.<\/li>\n<li>Scaleway: Support ssh keys provided inside an instance tag. [Porte Lo\u00efc]<\/li>\n<li>OVF: simplify expected return values of transport functions.<\/li>\n<li>Vmware: Add support for the com.vmware.guestInfo OVF transport. (<a href=\"https:\/\/bugs.launchpad.net\/bugs\/1807466\">LP: #1807466<\/a>)<\/li>\n<li>HACKING.rst: change contact info to Josh Powers<\/li>\n<li>Update to pylint 2.2.2.<\/li>\n<li>Release 18.5 (<a href=\"https:\/\/bugs.launchpad.net\/bugs\/1808380\">LP: #1808380<\/a>)<\/li>\n<li>tests: add Disco release [Joshua Powers]<\/li>\n<li>net: render &#8216;metric&#8217; values in per-subnet routes (<a href=\"https:\/\/bugs.launchpad.net\/bugs\/1805871\">LP: #1805871<\/a>)<\/li>\n<li>write_files: add support for appending to files. [James Baxter]<\/li>\n<li>config: On ubuntu select cloud archive mirrors for armel, armhf, arm64. (<a href=\"https:\/\/bugs.launchpad.net\/bugs\/1805854\">LP: #1805854<\/a>)<\/li>\n<\/ul>\n<h2 id=\"curtin\">curtin<\/h2>\n<ul>\n<li>vmtests: network mtu fix-by bump to post 19.04 release<\/li>\n<li>vmtest: Fix bug preventing explicit disabling of system_upgrade.<\/li>\n<li>Release 18.2<\/li>\n<\/ul>\n<h2 id=\"contact-the-ubuntu-server-team\">Contact the Ubuntu Server team<\/h2>\n<ul>\n<li>Chat on #ubuntu-server on Freenode<\/li>\n<li>Email the <a href=\"https:\/\/lists.ubuntu.com\/mailman\/listinfo\/ubuntu-server\">ubuntu-server mailing list<\/a><\/li>\n<li>Find us on the <a href=\"https:\/\/discourse.ubuntu.com\/c\/server\">Ubuntu Community Hub &#8211; server channel<\/a><\/li>\n<\/ul>\n<h2 id=\"bug-work-and-triage\">Bug Work and Triage<\/h2>\n<ul>\n<li>268 bugs in the <a href=\"\/\/bugs.launchpad.net\/~ubuntu-server\/+subscribedbugs\">backlog<\/a><\/li>\n<li><a href=\"https:\/\/wiki.ubuntu.com\/ServerTeam\/KnowledgeBase#Bug_Triage\">Notes on daily bug triage<\/a><\/li>\n<\/ul>\n<h2 id=\"ubuntu-server-packages\">Ubuntu Server Packages<\/h2>\n<p>Below is a summary of uploads to the development and supported releases. Current status of the Debian to Ubuntu merges is tracked on the <a href=\"https:\/\/merges.ubuntu.com\/main.html\">Merge-o-Matic page<\/a>. For a full list of recent merges with change logs please see the Ubuntu Server <a href=\"http:\/\/reqorts.qa.ubuntu.com\/reports\/ubuntu-server\/merges.html\">report<\/a>.<\/p>\n<h3 id=\"proposed-uploads-to-the-supported-releases\">Proposed Uploads to the Supported Releases<\/h3>\n<p>Please consider testing the following by <a href=\"https:\/\/wiki.ubuntu.com\/Testing\/EnableProposed\">enabling proposed<\/a>, checking packages for update regressions, and making sure to mark affected bugs <a href=\"https:\/\/wiki.ubuntu.com\/StableReleaseUpdates#Verification\">verified as fixed<\/a>.<\/p>\n<p>Total: 3<\/p>\n<ul>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/rdma-core\/17.1-1ubuntu0.1\"><code>rdma-core, bionic, 17.1-1ubuntu0.1, paelzer<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/strongswan\/5.6.2-1ubuntu2.4\"><code>strongswan, bionic, 5.6.2-1ubuntu2.4, paelzer<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/strongswan\/5.6.3-1ubuntu4.1\"><code>strongswan, cosmic, 5.6.3-1ubuntu4.1, paelzer<\/code><\/a><\/li>\n<\/ul>\n<h3 id=\"uploads-released-to-the-supported-releases\">Uploads Released to the Supported Releases<\/h3>\n<p>Total: 22<\/p>\n<ul>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/chrony\/2.1.1-1ubuntu0.1\"><code>chrony, xenial, 2.1.1-1ubuntu0.1, ebarretto<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/chrony\/1.29-1ubuntu0.1\"><code>chrony, trusty, 1.29-1ubuntu0.1, ebarretto<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/exim4\/4.90.1-1ubuntu1.1\"><code>exim4, bionic, 4.90.1-1ubuntu1.1, ahasenack<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/libvirt\/4.6.0-2ubuntu3.2\"><code>libvirt, cosmic, 4.6.0-2ubuntu3.2, paelzer<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/libvirt\/4.0.0-1ubuntu8.6\"><code>libvirt, bionic, 4.0.0-1ubuntu8.6, paelzer<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/lxc\/3.0.3-0ubuntu1~18.10.1\"><code>lxc, cosmic, 3.0.3-0ubuntu1~18.10.1, stgraber<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/lxc\/3.0.3-0ubuntu1~18.04.1\"><code>lxc, bionic, 3.0.3-0ubuntu1~18.04.1, stgraber<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/lxcfs\/3.0.3-0ubuntu1~18.10.1\"><code>lxcfs, cosmic, 3.0.3-0ubuntu1~18.10.1, stgraber<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/lxcfs\/3.0.3-0ubuntu1~18.04.1\"><code>lxcfs, bionic, 3.0.3-0ubuntu1~18.04.1, stgraber<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/lxd\/3.0.3-0ubuntu1~18.04.1\"><code>lxd, bionic, 3.0.3-0ubuntu1~18.04.1, stgraber<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/postfix\/3.3.0-1ubuntu0.2\"><code>postfix, bionic, 3.3.0-1ubuntu0.2, ahasenack<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/psmisc\/23.1-1ubuntu0.1\"><code>psmisc, bionic, 23.1-1ubuntu0.1, paelzer<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/psmisc\/23.1-1ubuntu1.1\"><code>psmisc, cosmic, 23.1-1ubuntu1.1, paelzer<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/qemu\/1:2.5+dfsg-5ubuntu10.34\"><code>qemu, xenial, 1:2.5+dfsg-5ubuntu10.34, paelzer<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/qemu\/1:2.11+dfsg-1ubuntu7.9\"><code>qemu, bionic, 1:2.11+dfsg-1ubuntu7.9, paelzer<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/qemu\/1:2.12+dfsg-3ubuntu8.2\"><code>qemu, cosmic, 1:2.12+dfsg-3ubuntu8.2, paelzer<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/rdma-core\/19.0-1ubuntu0.1\"><code>rdma-core, cosmic, 19.0-1ubuntu0.1, paelzer<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/tmux\/2.6-3ubuntu0.1\"><code>tmux, bionic, 2.6-3ubuntu0.1, kstenerud<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/walinuxagent\/2.2.32-0ubuntu1~14.04.1\"><code>walinuxagent, trusty, 2.2.32-0ubuntu1~14.04.1, sil2100<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/walinuxagent\/2.2.32-0ubuntu1~16.04.1\"><code>walinuxagent, xenial, 2.2.32-0ubuntu1~16.04.1, sil2100<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/walinuxagent\/2.2.32-0ubuntu1~18.04.1\"><code>walinuxagent, bionic, 2.2.32-0ubuntu1~18.04.1, sil2100<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/walinuxagent\/2.2.32-0ubuntu1~18.10.1\"><code>walinuxagent, cosmic, 2.2.32-0ubuntu1~18.10.1, sil2100<\/code><\/a><\/li>\n<\/ul>\n<h3 id=\"uploads-to-the-development-release\">Uploads to the Development Release<\/h3>\n<p>Total: 44<\/p>\n<ul>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/at\/3.1.23-1ubuntu1\"><code>at, 3.1.23-1ubuntu1, kstenerud<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/bind9\/1:9.11.5+dfsg-1ubuntu1\"><code>bind9, 1:9.11.5+dfsg-1ubuntu1, ahasenack<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/cloud-init\/18.5-1-g5b065316-0ubuntu1\"><code>cloud-init, 18.5-1-g5b065316-0ubuntu1, raharper<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/cloud-utils\/0.31-0ubuntu1\"><code>cloud-utils, 0.31-0ubuntu1, smoser<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/cloud-utils\/0.30-0ubuntu10\"><code>cloud-utils, 0.30-0ubuntu10, smoser<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/curtin\/18.2-0ubuntu1\"><code>curtin, 18.2-0ubuntu1, raharper<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/dnsmasq\/2.80-1ubuntu1\"><code>dnsmasq, 2.80-1ubuntu1, juliank<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/elinks\/0.12~pre6-14\"><code>elinks, 0.12~pre6-14, packages<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/facter\/3.11.0-1.1build1\"><code>facter, 3.11.0-1.1build1, raof<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/golang-github-mattn-go-runewidth\/0.0.4-1\"><code>golang-github-mattn-go-runewidth, 0.0.4-1, team+pkg-go<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/groovy\/2.4.16-1ubuntu1\"><code>groovy, 2.4.16-1ubuntu1, logan<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/groovy\/2.4.16-1\"><code>groovy, 2.4.16-1, pkg-java-maintainers<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/grub-legacy-ec2\/1:1ubuntu1\"><code>grub-legacy-ec2, 1:1ubuntu1, smoser<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/ipxe\/1.0.0+git-20180124.fbe8c52d-0ubuntu5\"><code>ipxe, 1.0.0+git-20180124.fbe8c52d-0ubuntu5, andreserl<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/kerberos-configs\/2.6build1\"><code>kerberos-configs, 2.6build1, jbicha<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/krb5\/1.16.2-1\"><code>krb5, 1.16.2-1, hartmans<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/librabbitmq\/0.9.0-0.2~build1\"><code>librabbitmq, 0.9.0-0.2~build1, costamagnagianfranco<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/libvirt\/4.6.0-2ubuntu5\"><code>libvirt, 4.6.0-2ubuntu5, paelzer<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/maas\/2.5.0-7442-gdf68e30a5-0ubuntu1\"><code>maas, 2.5.0-7442-gdf68e30a5-0ubuntu1, andreserl<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/net-snmp\/5.7.3+dfsg-1.8ubuntu5\"><code>net-snmp, 5.7.3+dfsg-1.8ubuntu5, jbicha<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/nmap\/7.70+dfsg1-6~build1\"><code>nmap, 7.70+dfsg1-6~build1, costamagnagianfranco<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/nmap\/7.70+dfsg1-5ubuntu1\"><code>nmap, 7.70+dfsg1-5ubuntu1, costamagnagianfranco<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/ocfs2-tools\/1.8.5-7\"><code>ocfs2-tools, 1.8.5-7, debian-ha-maintainers<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/oops\/0.0.14-0ubuntu1\"><code>oops, 0.0.14-0ubuntu1, logan<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/open-vm-tools\/2:10.3.5-1\"><code>open-vm-tools, 2:10.3.5-1, bzed<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/pep8\/1.7.1-3\"><code>pep8, 1.7.1-3, None<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/php-defaults\/69ubuntu1\"><code>php-defaults, 69ubuntu1, costamagnagianfranco<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/python-boto\/2.44.0-1.1ubuntu1\"><code>python-boto, 2.44.0-1.1ubuntu1, xnox<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/python-django\/1:1.11.18-1ubuntu2\"><code>python-django, 1:1.11.18-1ubuntu2, costamagnagianfranco<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/python-django\/1:1.11.18-1ubuntu1\"><code>python-django, 1:1.11.18-1ubuntu1, costamagnagianfranco<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/python-django\/1:1.11.17-2ubuntu1\"><code>python-django, 1:1.11.17-2ubuntu1, costamagnagianfranco<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/python-django\/1:1.11.17-2\"><code>python-django, 1:1.11.17-2, None<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/python-django\/1:1.11.17-1ubuntu1\"><code>python-django, 1:1.11.17-1ubuntu1, costamagnagianfranco<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/python-django\/1:1.11.17-1\"><code>python-django, 1:1.11.17-1, None<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/rabbitmq-server\/3.7.8-4ubuntu2\"><code>rabbitmq-server, 3.7.8-4ubuntu2, james-page<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/ruby-childprocess\/0.9.0-1\"><code>ruby-childprocess, 0.9.0-1, pkg-ruby-extras-maintainers<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/ruby2.5\/2.5.3-3ubuntu1\"><code>ruby2.5, 2.5.3-3ubuntu1, paelzer<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/samba\/2:4.9.2+dfsg-2ubuntu2\"><code>samba, 2:4.9.2+dfsg-2ubuntu2, ahasenack<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/simplestreams\/0.1.0-22-g409fdc15-0ubuntu1\"><code>simplestreams, 0.1.0-22-g409fdc15-0ubuntu1, smoser<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/slof\/20180702+dfsg-1\"><code>slof, 20180702+dfsg-1, pkg-qemu-devel<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/strongswan\/5.7.1-1ubuntu2\"><code>strongswan, 5.7.1-1ubuntu2, paelzer<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/strongswan\/5.7.1-1ubuntu1\"><code>strongswan, 5.7.1-1ubuntu1, paelzer<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/sysstat\/12.0.1-1build1\"><code>sysstat, 12.0.1-1build1, jbicha<\/code><\/a><\/li>\n<li><a href=\"https:\/\/launchpad.net\/ubuntu\/+source\/websockify\/0.8.0+dfsg1-10ubuntu2\"><code>websockify, 0.8.0+dfsg1-10ubuntu2, james-page<\/code><\/a><\/li>\n<\/ul>\n",
+      "protected": false
+    },
+    "excerpt": {
+      "rendered": "<p>Hello Ubuntu Server The purpose of this communication is to provide a status update and highlights for any interesting subjects from the Ubuntu Server Team. If you would like to reach the server team, you can find us at the #ubuntu-server channel on Freenode. Alternatively, you can sign up and use the Ubuntu Server Team [&hellip;]<\/p>\n",
+      "protected": false
+    },
+    "author": 582,
+    "featured_media": 87225,
+    "comment_status": "open",
+    "ping_status": "closed",
+    "sticky": false,
+    "template": "",
+    "format": "standard",
+    "meta": [],
+    "categories": [
+      1453
+    ],
+    "tags": [
+      1480,
+      1610,
+      2425
+    ],
+    "topic": [
+      1477,
+      1922
+    ],
+    "group": [
+      1706
+    ],
+    "_event_location": "",
+    "_event_venue": "",
+    "_event_registration": "",
+    "_start_day": "08",
+    "_start_month": "01",
+    "_start_year": "2019",
+    "_end_day": "08",
+    "_end_month": "01",
+    "_end_year": "2019",
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts\/87224"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/types\/post"
+        }
+      ],
+      "author": [
+        {
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/users\/582"
+        }
+      ],
+      "replies": [
+        {
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/comments?post=87224"
+        }
+      ],
+      "version-history": [
+        {
+          "count": 1,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts\/87224\/revisions"
+        }
+      ],
+      "predecessor-version": [
+        {
+          "id": 87226,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts\/87224\/revisions\/87226"
+        }
+      ],
+      "wp:featuredmedia": [
+        {
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media\/87225"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media?parent=87224"
+        }
+      ],
+      "wp:term": [
+        {
+          "taxonomy": "category",
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/categories?post=87224"
+        },
+        {
+          "taxonomy": "post_tag",
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags?post=87224"
+        },
+        {
+          "taxonomy": "topic",
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/topic?post=87224"
+        },
+        {
+          "taxonomy": "group",
+          "embeddable": true,
+          "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/group?post=87224"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    },
+    "_embedded": {
+      "author": [
+        {
+          "id": 582,
+          "name": "Chad Smith",
+          "url": "https:\/\/login.ubuntu.com\/+id\/RAsJCNm",
+          "description": "",
+          "link": "https:\/\/admin.insights.ubuntu.com\/author\/chad-smith\/",
+          "slug": "chad-smith",
+          "avatar_urls": {
+            "24": "https:\/\/secure.gravatar.com\/avatar\/dd1d57f6f1ea59ea0c12260f5e3b5767?s=24&d=mm&r=g",
+            "48": "https:\/\/secure.gravatar.com\/avatar\/dd1d57f6f1ea59ea0c12260f5e3b5767?s=48&d=mm&r=g",
+            "96": "https:\/\/secure.gravatar.com\/avatar\/dd1d57f6f1ea59ea0c12260f5e3b5767?s=96&d=mm&r=g"
+          },
+          "user_job_title": "",
+          "user_website_title": "",
+          "user_google": "",
+          "user_twitter": "",
+          "user_facebook": "",
+          "user_photo": "",
+          "user_location": "",
+          "_links": {
+            "self": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/users\/582"
+              }
+            ],
+            "collection": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/users"
+              }
+            ]
+          }
+        }
+      ],
+      "wp:featuredmedia": [
+        {
+          "id": 87225,
+          "date": "2019-01-08T20:45:45",
+          "slug": "weeklystatus1",
+          "type": "attachment",
+          "link": "https:\/\/admin.insights.ubuntu.com\/2019\/01\/08\/ubuntu-server-development-summary-08-january-2019\/weeklystatus1\/",
+          "title": {
+            "rendered": "weeklystatus1"
+          },
+          "author": 582,
+          "caption": {
+            "rendered": ""
+          },
+          "alt_text": "",
+          "media_type": "image",
+          "mime_type": "image\/png",
+          "media_details": {
+            "width": 960,
+            "height": 540,
+            "file": "weeklystatus1.png",
+            "image_meta": {
+              "aperture": "0",
+              "credit": "",
+              "camera": "",
+              "caption": "",
+              "created_timestamp": "0",
+              "copyright": "",
+              "focal_length": "0",
+              "iso": "0",
+              "shutter_speed": "0",
+              "title": "",
+              "orientation": "0",
+              "keywords": []
+            },
+            "sizes": {}
+          },
+          "source_url": "https:\/\/admin.insights.ubuntu.com\/wp-content\/uploads\/cc7a\/weeklystatus1.png",
+          "_links": {
+            "self": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media\/87225"
+              }
+            ],
+            "collection": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media"
+              }
+            ],
+            "about": [
+              {
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/types\/attachment"
+              }
+            ],
+            "author": [
+              {
+                "embeddable": true,
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/users\/582"
+              }
+            ],
+            "replies": [
+              {
+                "embeddable": true,
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/comments?post=87225"
+              }
+            ],
+            "wp:term": [
+              {
+                "taxonomy": "topic",
+                "embeddable": true,
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/topic?post=87225"
+              },
+              {
+                "taxonomy": "group",
+                "embeddable": true,
+                "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/group?post=87225"
+              }
+            ],
+            "curies": [
+              {
+                "name": "wp",
+                "href": "https:\/\/api.w.org\/{rel}",
+                "templated": true
+              }
+            ]
+          }
+        }
+      ],
+      "wp:term": [
+        [
+          {
+            "id": 1453,
+            "link": "https:\/\/admin.insights.ubuntu.com\/category\/articles\/",
+            "name": "Articles",
+            "slug": "articles",
+            "taxonomy": "category",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/categories\/1453"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/categories"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/category"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?categories=1453"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?categories=1453"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "id": 1480,
+            "link": "https:\/\/admin.insights.ubuntu.com\/tag\/server\/",
+            "name": "Server",
+            "slug": "server",
+            "taxonomy": "post_tag",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags\/1480"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/post_tag"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?tags=1480"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?tags=1480"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          },
+          {
+            "id": 1610,
+            "link": "https:\/\/admin.insights.ubuntu.com\/tag\/ubuntu-server\/",
+            "name": "Ubuntu Server",
+            "slug": "ubuntu-server",
+            "taxonomy": "post_tag",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags\/1610"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/post_tag"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?tags=1610"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?tags=1610"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          },
+          {
+            "id": 2425,
+            "link": "https:\/\/admin.insights.ubuntu.com\/tag\/weekly\/",
+            "name": "weekly",
+            "slug": "weekly",
+            "taxonomy": "post_tag",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags\/2425"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/tags"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/post_tag"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?tags=2425"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?tags=2425"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "id": 1477,
+            "link": "https:\/\/admin.insights.ubuntu.com\/topic\/cloud\/",
+            "name": "Cloud",
+            "slug": "cloud",
+            "taxonomy": "topic",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/topic\/1477"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/topic"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/topic"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?topic=1477"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media?topic=1477"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?topic=1477"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          },
+          {
+            "id": 1922,
+            "link": "https:\/\/admin.insights.ubuntu.com\/topic\/server\/",
+            "name": "Server",
+            "slug": "server",
+            "taxonomy": "topic",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/topic\/1922"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/topic"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/topic"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?topic=1922"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media?topic=1922"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?topic=1922"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "id": 1706,
+            "link": "https:\/\/admin.insights.ubuntu.com\/group\/cloud-and-server\/",
+            "name": "Cloud and server",
+            "slug": "cloud-and-server",
+            "taxonomy": "group",
+            "_links": {
+              "self": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/group\/1706"
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/group"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/taxonomies\/group"
+                }
+              ],
+              "wp:post_type": [
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/posts?group=1706"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/media?group=1706"
+                },
+                {
+                  "href": "https:\/\/admin.insights.ubuntu.com\/wp-json\/wp\/v2\/event?group=1706"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https:\/\/api.w.org\/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    }
+  }
+]

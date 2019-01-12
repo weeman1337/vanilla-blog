@@ -1,0 +1,30 @@
+@mixin vf-p-card-blog {
+  %p-card--blog {
+    @extend %vf-card;
+    @extend %vf-has-box-shadow;
+    @extend %vf-has-round-corners;
+  }
+
+  .p-card--blog {
+    @extend %p-card--blog;
+
+    border-top: 3px solid $brand-light-aubergine;
+    display: flex;
+    flex-direction: column;
+    padding-top: $sp-medium;
+
+    .p-card__header--blog {
+      padding-bottom: $sp-small;
+    }
+
+    .p-card__divider {
+      background-color: transparent;
+      border-bottom: $grid-border-style;
+      height: 0;
+    }
+
+    .p-card__footer {
+      margin-bottom: 0;
+    }
+  }
+}

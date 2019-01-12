@@ -1,0 +1,16 @@
+@import "settings";
+
+@import "~vanilla-framework/scss/vanilla";
+@include vanilla;
+
+@import "patterns_cards";
+@include vf-p-card-blog();
+
+.p-content {
+  min-height: 75vh;
+  padding-top: $sp-large;
+}
+
+.u-mt-auto {
+  margin-top: auto;
+}

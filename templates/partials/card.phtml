@@ -1,0 +1,27 @@
+<div class="p-card--blog col-4">
+    <header class="p-card__header--blog">
+        <h5 class="p-muted-heading"><?php echo $escape($card['group']); ?></h5>
+    </header>
+    <hr class="p-card__divider">
+    <a href="<?php echo $escapeAttr($card['link']); ?>" title="go to full post">
+        <img class="p-card__image" src="<?php echo $escapeAttr($card['image']); ?>"
+             alt="<?php echo $escapeAttr($card['imageAlt']); ?>">
+    </a>
+    <h4 class="p-card__title">
+        <a href="<?php echo $escapeAttr($card['link']); ?>" title="go to full post">
+            <?php echo $escape($card['title']); ?>
+        </a>
+    </h4>
+    <p>
+        <em>
+            By <a href="<?php echo $escapeAttr($card['authorLink']); ?>" title="go to author details">
+                <?php echo $escape($card['author']); ?>
+            </a>
+            on <?php echo $card['date']->format('j F Y'); ?>
+        </em>
+    </p>
+    <hr class="p-card__divider u-mt-auto">
+    <p class="p-card__footer">
+        <?php echo $escape($card['tag']); ?>
+    </p>
+</div>
