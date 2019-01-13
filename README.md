@@ -23,6 +23,7 @@ This app contains build frontend components. A build is required.
 * PHP >= 7.2
 * PHP GD extension
 * PHP JSON extension
+* composer
 
 **Recommended**
 * PHP cURL extension
@@ -36,7 +37,7 @@ You may run the app with the built in PHP web server:
 ## Running tests
 
     composer install
-    ./vendor/bin/phpunit
+    composer run test
 
 ## License
 This project is licensed under the MIT License.
