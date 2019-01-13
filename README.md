@@ -21,6 +21,7 @@ This app contains build frontend components. A build is required.
 
 ### Requirements
 * PHP >= 7.2
+* PHP GD extension
 * PHP JSON extension
 
 **Recommended**
